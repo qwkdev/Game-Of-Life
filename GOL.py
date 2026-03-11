@@ -1,6 +1,7 @@
 import random
 import time
 import os
+import math
 
 #Conway's Game of Life
 #alive=█, dead=" "
@@ -9,6 +10,25 @@ import os
 #   Any live cell with two or three live cells survives.
 #   Any dead cell with exactly three live cells becomes a live cell.
 #   All other live cells die in the next generation. (if too much they also die)
+
+tbl = {
+    (0, 0, 0, 0): '\u2800',
+    (0, 0, 0, 1): '\u2597',
+    (0, 0, 1, 0): '\u2596',
+    (0, 0, 1, 1): '\u2584',
+    (0, 1, 0, 0): '\u259D',
+    (0, 1, 0, 1): '\u2590',
+    (0, 1, 1, 0): '\u259E',
+    (0, 1, 1, 1): '\u259F',
+    (1, 0, 0, 0): '\u2598',
+    (1, 0, 0, 1): '\u259A',
+    (1, 0, 1, 0): '\u258C',
+    (1, 0, 1, 1): '\u2599',
+    (1, 1, 0, 0): '\u2580',
+    (1, 1, 0, 1): '\u259C',
+    (1, 1, 1, 0): '\u259B',
+    (1, 1, 1, 1): '\u2588'
+}
 
 def createGrid():
     rows = 45
@@ -63,17 +83,17 @@ def generation(grid):
     return newGrid
 
 def displayGrid(grid,columns,rows):
-    displayGrid = [[0 for _ in range(columns)] for _ in range(rows)] #Create a new grid to prevent overwritting original grid
-    for y in range(len(grid)): #Go through all values
-        for x in range(len(grid)):
-            if grid[y][x] == 1:
-                displayGrid[y][x] = "█" #Changes the 1 values to blocks to better represent it
-            elif grid[y][x] == 0:
-                displayGrid[y][x] = " " #Changes the 0 values to spaces to better represent it
+    display = ''
+    for y in range(0, len(grid), 2): #Go through all values
+        for x in range(0, len(grid), 2):
+            display += tbl[(grid[y][x],
+                grid[y][x+1],
+                grid[y+1][x],
+                grid[y+1][x+1])]
+        display += '\n'
 
     print('\033[H', end='')
-    for counter in range(len(displayGrid)):
-        print("".join(str(v) for v in displayGrid[counter])) #join the cells with empty characters
+    print(display)
 
 
 
@@ -91,3 +111,4 @@ while True:
     time.sleep(0.4) #Refresh every 0.3 seconds
 
 os.system('cls')
+
